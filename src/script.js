@@ -56,8 +56,8 @@ Backbone.Model.Base = Backbone.Model.extend({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Backbone.View.Base = Backbone.View.extend({})
+Backbone.Collection.Base = Backbone.Collection.extend({})
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Backbone.Controller.Base = Backbone.Controller.extend({})
+Backbone.View.Base = Backbone.View.extend({})
