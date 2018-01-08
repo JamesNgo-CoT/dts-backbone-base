@@ -6,6 +6,8 @@ Backbone.Model.Base = Backbone.Model.extend({
   initialize: function() {},
 
   set: function(attrs, opts) {
+
+    // Format arguments to remove variations.
     if (typeof attrs === 'string') {
       attrs = {
         [attrs]: opts
@@ -13,11 +15,14 @@ Backbone.Model.Base = Backbone.Model.extend({
       opts = arguments[2] || {}
     }
 
+    // Format attribute values based on attibute types extention property.
     if (this.attributeTypes && typeof this.attributeTypes === 'object') {
       for (const k in this.attributeTypes) {
         if (this.attributeTypes.hasOwnProperty(k) && this.attributeTypes[k]
           && attrs.hasOwnProperty(k) && attrs[k]) {
 
+          // Format value into array for spread operator when providing
+          // arguments to constructors.
           const value = Array.isArray(attrs[k]) ? attrs[k] : [attrs[k]]
 
           if (typeof this.attributeTypes[k] === 'string') {
