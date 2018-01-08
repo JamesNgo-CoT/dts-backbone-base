@@ -3,8 +3,6 @@
 Backbone.Model.Base = Backbone.Model.extend({
   attributeTypes: {},
 
-  initialize: function() {},
-
   set: function(attrs, opts) {
 
     // Format arguments to remove variations.

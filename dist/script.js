@@ -11,7 +11,47 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 Backbone.Model.Base = Backbone.Model.extend({
   attributeTypes: {},
 
-  initialize: function initialize() {},
+  initialize: function initialize() {
+    var _this = this;
+
+    this.on('change', function (model) {
+
+      // Only mange changes that belong to itself.
+      if (_this === model) {
+        var changedAttributes = _this.changedAttributes();
+        var previousAttributes = _this.previousAttributes();
+
+        var _loop = function _loop(k) {
+
+          // Stop listening.
+          if (previousAttributes.hasOwnProperty(k) && previousAttributes[k]) {
+            if (previousAttributes[k] instanceof Backbone.Model) {
+              _this.stopListening(previousAttributes[k], 'change');
+              _this.stopListening(previousAttributes[k], 'change:' + k);
+            } else if (previousAttributes[k] instanceof Backbone.Collection) {
+              _this.stopListening(previousAttributes[k], 'update');
+            }
+          }
+
+          // Start listening.
+          if (changedAttributes.hasOwnProperty(k) && changedAttributes[k]) {
+            if (changedAttributes[k] instanceof Backbone.Model) {
+              _this.listenTo(changedAttributes[k], 'change', function (model, opts) {
+                _this.trigger('change', model, opts);
+                _this.trigger('change:' + k, _this, model, opts);
+              });
+            } else if (changedAttributes[k] instanceof Backbone.Collection) {
+              _this.listenTo(changedAttributes[k], 'update', function () {});
+            }
+          }
+        };
+
+        for (var k in changedAttributes) {
+          _loop(k);
+        }
+      }
+    });
+  },
 
   set: function set(attrs, opts) {
 
